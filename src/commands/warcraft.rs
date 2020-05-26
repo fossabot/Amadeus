@@ -47,7 +47,15 @@ pub fn tour(ctx: &mut Context, msg: &Message, on : DateTime<Utc>) -> CommandResu
                     if val.len() >= 14 {
                       let str_hour = &val[9..11];
                       let str_min = &val[11..13];
-                      evstr = format!("• {}:{} CET", str_hour, str_min);
+                      let msk =
+                        if let Ok(str_int) = str_hour.parse::<i32>() {
+                          let mut msk_h = str_int + 3;
+                          if msk_h >= 24 {
+                            msk_h = msk_h - 24;
+                          }
+                          format!(" ({}:{} MSK)", msk_h.to_string(), str_min)
+                        } else { String::from("") };
+                      evstr = format!("• {}:{} CET {}", str_hour, str_min, msk);
                     }
                   }
                 }
